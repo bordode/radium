@@ -1,4 +1,5 @@
 #include "gdt.h"
+#include "panic.h"
 #include "types.h"
 
 typedef struct {
@@ -12,7 +13,7 @@ typedef struct {
 gdt_entry_t;
 
 static gdt_entry_t
-gdt[5];
+gdt[6];
 
 volatile struct {
     uint16_t size;
@@ -21,27 +22,49 @@ volatile struct {
 gdtr;
 
 static void
-gdt_set_entry(gdt_selector_t sel, uint32_t base, uint32_t limit, gdt_privilege_t priv, gdt_type_t type)
+gdt_set_entry_raw(gdt_selector_t sel, uint32_t base, uint32_t limit, uint8_t access)
 {
-    limit /= 4096;
+    if(sel >= sizeof(gdt)) {
+        panic("GDT overflow");
+    }
+
+    uint8_t flags = 1 << 6; // 32 bit segment
+
+    // 1 MiB is the maximum segment size that can be expressed with 1 byte
+    // granularity. If we need to express a size bigger than this, we need
+    // to divide the size by 4 KiB and use 4 KiB granularity.
+    if(limit >= (1 << 20)) {
+        limit /= 4096;
+        flags |= 1 << 7; // 4 KiB granularity
+    }
 
     gdt_entry_t ent;
     ent.limit_0_15 = limit & 0xffff;
     ent.base_0_15 = base & 0xffff;
     ent.base_16_23 = (base >> 16) & 0xff;
-    ent.access = (1 << 7)          // present
-               | ((priv & 3) << 5) // privilege
-               | (1 << 4)          // dunno lol
-               | ((type & 1) << 3) // code/data
-               | (1 << 1)          // data segments are always writable, code segments are always readable
-               ;
-    ent.limit_16_19_and_flags = ((limit >> 16) & 0x0f)
-                              | (1 << 7) // 4 KiB granularity
-                              | (1 << 6) // 32 bit segment;
-                              ;
+    ent.access = access;
+    ent.limit_16_19_and_flags = ((limit >> 16) & 0x0f) | flags;
     ent.base_24_31 = (base >> 24) & 0xff;
 
     gdt[sel / sizeof(gdt_entry_t)] = ent;
+}
+
+void
+gdt_set_entry(gdt_selector_t sel, uint32_t base, uint32_t limit, gdt_privilege_t priv, gdt_type_t type)
+{
+    gdt_set_entry_raw(sel, base, limit,
+        (1 << 7)          | // present
+        ((priv & 3) << 5) | // privilege
+        (1 << 4)          | // dunno lol
+        ((type & 1) << 3) | // code/data
+        (1 << 1)            // data segments are always writable, code segments are always readable
+    );
+}
+
+void
+gdt_set_tss(gdt_selector_t sel, uint32_t base, uint32_t limit)
+{
+    gdt_set_entry_raw(sel, base, limit, 0x89);
 }
 
 void

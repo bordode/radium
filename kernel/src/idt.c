@@ -36,14 +36,6 @@ interrupts_register_isr(uint8_t interrupt_no, uint32_t handler)
     ent.offset_16_31 = (handler >> 16) & 0xffff;
 
     idt[interrupt_no] = ent;
-
-    printf("Interrupt no. #%d points to 0x%x\n", interrupt_no, handler);
-}
-
-void
-interrupts_set_callable_from_user_mode(uint8_t interrupt_no)
-{
-    idt[interrupt_no].type_attr |= 3 << 5;
 }
 
 static void
@@ -77,16 +69,4 @@ idt_init()
     idtr.size = sizeof(idt) - 1;
     idtr.offset = idt;
     idt_load();
-}
-
-void
-interrupts_disable()
-{
-    __asm__ volatile("cli");
-}
-
-void
-interrupts_enable()
-{
-    __asm__ volatile("sti");
 }

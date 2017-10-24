@@ -6,26 +6,22 @@
 
 #define PAGE_SIZE 4096
 
-#define PE_PRESENT    (1 << 0)
-#define PE_READ_WRITE (1 << 1)
-#define PE_USER       (1 << 2)
 #define PE_FLAG_MASK  (PAGE_SIZE - 1)
 #define PE_ADDR_MASK  (~PE_FLAG_MASK)
 
-typedef uint32_t virt_t;
-typedef uint32_t phys_t;
+#define KERNEL_STACK_BEGIN       0x0fc00000ul
+#define KERNEL_STACK_END         0x0ffffffcul
+#define USER_BEGIN               0x10000000ul
+#define USER_STACK_END           0xffc00000ul
+#define CURRENT_PAGE_DIRECTORY   0xfffff000ul
+#define CURRENT_PAGE_TABLE_BASE  0xffc00000ul
 
 typedef enum {
-    PAGE_KERNEL,
-    PAGE_USER,
+    PE_PRESENT    = 1 << 0,
+    PE_READ_WRITE = 1 << 1,
+    PE_USER       = 1 << 2,
 }
-page_privilege_t;
-
-typedef enum {
-    PAGE_READ_ONLY,
-    PAGE_READ_WRITE,
-}
-page_access_t;
+page_flags_t;
 
 void
 paging_set_allocatable_start(phys_t addr);
@@ -43,6 +39,21 @@ void
 page_free(phys_t addr);
 
 void
-page_map(virt_t virt_page, phys_t phys_page, int flags);
+page_map(virt_t virt_page, phys_t phys_page, page_flags_t flags);
+
+void
+page_unmap(virt_t virt_page);
+
+phys_t
+virt_to_phys(virt_t virt);
+
+void*
+page_temp_map(phys_t phys_page);
+
+void
+page_temp_unmap();
+
+bool
+page_is_user_mapped(virt_t virt);
 
 #endif

@@ -1,7 +1,8 @@
 CFLAGS = \
 	-Wall -Wextra -pedantic -Werror -nostdlib -nostdinc -fno-builtin \
 	-nostartfiles -nodefaultlibs -fno-exceptions -ffreestanding \
-	-fno-stack-protector -fno-pic -std=c99 -m32 -iquote inc -masm=intel
+	-fno-stack-protector -fno-pic -std=c99 -m32 -iquote inc -masm=intel \
+	-I ../api
 
 OBJECTS = \
 	src/console.o \
@@ -9,13 +10,19 @@ OBJECTS = \
 	src/gdt_helper.o \
 	src/idt.o \
 	src/isrs.o \
+	src/kernel_page.o \
 	src/loader.o \
 	src/main.o \
 	src/paging.o \
 	src/paging_init.o \
 	src/panic.o \
 	src/panic_helper.o \
+	src/pit.o \
+	src/sched.o \
 	src/string.o \
+	src/syscall.o \
+	src/syscall_entry.o \
+	src/task.o \
 
 .PHONY: clean
 
@@ -24,7 +31,7 @@ radium.bin: linker.ld $(OBJECTS) script/embed_symbol_table.rb
 	@ld -o $@ -T linker.ld $(OBJECTS)
 	ruby script/embed_symbol_table.rb
 
-%.o: %.c
+%.o: %.c inc/*.h
 	@echo cc $@
 	@gcc -o $@ $(CFLAGS) -c $<
 

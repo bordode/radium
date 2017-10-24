@@ -1,10 +1,15 @@
 #include "console.h"
 #include "gdt.h"
 #include "idt.h"
+#include "kernel_page.h"
 #include "multiboot.h"
 #include "paging.h"
 #include "panic.h"
+#include "pit.h"
+#include "sched.h"
 #include "string.h"
+#include "syscall.h"
+#include "task.h"
 #include "types.h"
 
 static multiboot_info_t* mb;
@@ -29,8 +34,6 @@ kmain(multiboot_info_t* mb_, uint32_t magic)
     (void)magic;
     mb = mb_;
 
-    interrupts_disable();
-
     console_init();
 
     printf("Radium booting from %s.\n", (const char*)mb->boot_loader_name);
@@ -42,18 +45,12 @@ kmain(multiboot_info_t* mb_, uint32_t magic)
 
     gdt_init();
     idt_init();
+    pit_set_frequency(100);
     paging_init(mb);
-
-    printf("Booted.\n");
-
-    interrupts_enable();
+    task_init();
+    syscall_init();
 
     multiboot_module_t* mod = find_module("/init.bin");
-    page_map(0x10000000, mod->mod_start, PE_PRESENT | PE_USER);
 
-    printf("--> %x\n", *(uint32_t*)0x10000000);
-
-    while(1) {
-        __asm__ volatile("hlt");
-    }
+    task_boot_init((const char*)mod->mod_start, mod->mod_end - mod->mod_start);
 }
