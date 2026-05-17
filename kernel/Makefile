@@ -1,3 +1,5 @@
+LD = ld -melf_i386
+
 CFLAGS = \
 	-Wall -Wextra -pedantic -Werror -nostdlib -nostdinc -fno-builtin \
 	-nostartfiles -nodefaultlibs -fno-exceptions -ffreestanding \
@@ -28,7 +30,7 @@ OBJECTS = \
 
 radium.bin: linker.ld $(OBJECTS) script/embed_symbol_table.rb
 	@echo ld $@
-	@ld -o $@ -T linker.ld $(OBJECTS)
+	@$(LD) -o $@ -T linker.ld $(OBJECTS)
 	ruby script/embed_symbol_table.rb
 
 %.o: %.c inc/*.h

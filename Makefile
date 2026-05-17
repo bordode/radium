@@ -18,6 +18,7 @@ hdd.base.img: hdd.base.img.gz
 clean:
 	rm -f hdd.img hdd.base.img
 	make -C kernel clean
+	make -C user clean
 
 kernel/radium.bin:
 	make -C kernel radium.bin
