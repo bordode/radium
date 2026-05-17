@@ -15,3 +15,18 @@ Hobby OS.
 | `1000_0000` | `ffbf_ffff` | User address space.
 | `ffc0_0000` | `ffff_efff` | Recursively mapped page tables
 | `ffff_f000` | `ffff_ffff` | Recursively mapped page directory
+
+## Cloud9 Assembly investigation helper
+
+The repository includes a dependency-free Python helper for organizing
+astronomy article excerpts into claims, risk labels, and follow-up checks:
+
+```sh
+python3 tools/cloud9_assembly.py
+python3 tools/cloud9_assembly.py article.txt -o investigation.md
+```
+
+Run it with no input to emit built-in investigation seeds for the two Avi Loeb
+essays about Sagittarius A* gas clouds and first-star enrichment. To avoid
+checking copyrighted article text into the repository, pass local notes or
+excerpts through files or standard input when deeper triage is needed.
