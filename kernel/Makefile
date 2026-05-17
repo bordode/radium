@@ -28,7 +28,7 @@ OBJECTS = \
 
 radium.bin: linker.ld $(OBJECTS) script/embed_symbol_table.rb
 	@echo ld $@
-	@ld -o $@ -T linker.ld $(OBJECTS)
+	@ld -m elf_i386 -o $@ -T linker.ld $(OBJECTS)
 	ruby script/embed_symbol_table.rb
 
 %.o: %.c inc/*.h
