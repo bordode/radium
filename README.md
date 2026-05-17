@@ -15,3 +15,12 @@ Hobby OS.
 | `1000_0000` | `ffbf_ffff` | User address space.
 | `ffc0_0000` | `ffff_efff` | Recursively mapped page tables
 | `ffff_f000` | `ffff_ffff` | Recursively mapped page directory
+
+## Syscall Investigation
+
+Use `tools/syscall_audit.py --check` when changing syscalls or the `sysenter`
+assembly path. The dependency-free Python audit cross-checks the public syscall
+numbers in `api/radium.h`, the kernel dispatch table in `kernel/src/syscall.c`,
+the user-space wrappers in `user/crt1.c`, and the assembly exports/register
+layout used by `user/crt0.asm` and `kernel/src/syscall_entry.asm`.
+

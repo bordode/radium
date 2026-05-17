@@ -4,11 +4,13 @@ CFLAGS = \
 	-fno-stack-protector -fno-pic -std=c99 -m32 -masm=intel \
 	-I ../api -fleading-underscore
 
+.PHONY: all clean
+
 all: init.bin
 
 %.bin: crt0.o crt1.o %.o
 	@echo ld $@
-	@ld -o $@ -T linker.ld $^
+	@ld -m elf_i386 -o $@ -T linker.ld $^
 
 crt0.o: crt0.asm
 	@echo nasm $@
@@ -17,3 +19,6 @@ crt0.o: crt0.asm
 %.o: %.c
 	@echo cc $@
 	@gcc -o $@ $(CFLAGS) -c $<
+
+clean:
+	rm -f init.bin crt0.o crt1.o init.o
