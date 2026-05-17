@@ -15,3 +15,20 @@ Hobby OS.
 | `1000_0000` | `ffbf_ffff` | User address space.
 | `ffc0_0000` | `ffff_efff` | Recursively mapped page tables
 | `ffff_f000` | `ffff_ffff` | Recursively mapped page directory
+
+## Cloud9 Assembly Investigation
+
+Run the dependency-free Python investigation utility to classify hypothetical
+negative-mass binary systems from a Cloud9-style shell:
+
+```sh
+python3 tools/cloud9_assembly.py
+```
+
+The utility prints ordinary chirp, anti-chirp, repulsive, runaway, and
+equivalence-principle-breaking dipole-candidate regimes.  Custom cases can be
+provided with a CSV containing `name,m1g,m1i,m2g,m2i[,separation]` columns:
+
+```sh
+python3 tools/cloud9_assembly.py --csv cases.csv --separation 10
+```
