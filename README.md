@@ -15,3 +15,13 @@ Hobby OS.
 | `1000_0000` | `ffbf_ffff` | User address space.
 | `ffc0_0000` | `ffff_efff` | Recursively mapped page tables
 | `ffff_f000` | `ffff_ffff` | Recursively mapped page directory
+
+## Investigation tools
+
+Run the Cloud9 Assembly syscall investigation from the repository root:
+
+```sh
+make investigate
+```
+
+The Python checker cross-references public syscall numbers, kernel dispatch handlers, user-space wrappers, and the SYSENTER/SYSEXIT assembly bridge.
