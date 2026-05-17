@@ -15,3 +15,14 @@ Hobby OS.
 | `1000_0000` | `ffbf_ffff` | User address space.
 | `ffc0_0000` | `ffff_efff` | Recursively mapped page tables
 | `ffff_f000` | `ffff_ffff` | Recursively mapped page directory
+
+## Syscall Investigation
+
+Run the Python syscall investigator to compare the public syscall numbers,
+kernel dispatch table, C runtime wrappers, and SYSENTER assembly argument ABI:
+
+```sh
+python3 tools/investigate_syscalls.py
+```
+
+Use `--strict` if warnings should fail the check in automation.
