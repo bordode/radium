@@ -151,7 +151,7 @@ syscall_table[] = {
 void
 syscall_dispatch(registers_t* regs)
 {
-    if(REG_VECTOR(regs) > countof(syscall_table)) {
+    if(REG_VECTOR(regs) >= countof(syscall_table)) {
         REG_RETURN(regs) = -ENOSYS;
         return;
     }
