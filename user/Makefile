@@ -1,3 +1,4 @@
+LD = ld -m elf_i386
 CFLAGS = \
 	-Wall -Wextra -pedantic -Werror -nostdlib -nostdinc -fno-builtin \
 	-nostartfiles -nodefaultlibs -fno-exceptions -ffreestanding \
@@ -8,7 +9,7 @@ all: init.bin
 
 %.bin: crt0.o crt1.o %.o
 	@echo ld $@
-	@ld -o $@ -T linker.ld $^
+	@$(LD) -o $@ -T linker.ld $^
 
 crt0.o: crt0.asm
 	@echo nasm $@
@@ -17,3 +18,8 @@ crt0.o: crt0.asm
 %.o: %.c
 	@echo cc $@
 	@gcc -o $@ $(CFLAGS) -c $<
+
+.PHONY: clean
+
+clean:
+	rm -f init.bin crt0.o crt1.o init.o
