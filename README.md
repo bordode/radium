@@ -15,3 +15,17 @@ Hobby OS.
 | `1000_0000` | `ffbf_ffff` | User address space.
 | `ffc0_0000` | `ffff_efff` | Recursively mapped page tables
 | `ffff_f000` | `ffff_ffff` | Recursively mapped page directory
+
+## Investigation Tools
+
+Run the Avi Loeb article toy investigation script with Python 3:
+
+```sh
+python3 tools/loeb_investigation.py
+```
+
+The script assembles quick, dependency-free checks for positive/negative-mass
+binary sign logic, early-universe temperature estimates, and Galactic-center
+orbital scales. Its output is intended as an investigation checklist rather than
+a substitute for numerical relativity, stellar-evolution, or hydrodynamic
+simulations.
