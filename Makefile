@@ -1,4 +1,4 @@
-.PHONY: clean kernel/radium.bin user/init.bin
+.PHONY: all clean investigate kernel/radium.bin user/init.bin
 
 ifeq ($(shell uname),Darwin)
 $(error Cowardly refusing to run on Mac OS X)
@@ -15,9 +15,13 @@ hdd.img: hdd.base.img boot/grub/menu.lst kernel/radium.bin user/init.bin
 hdd.base.img: hdd.base.img.gz
 	gzip -dc $< > $@
 
+investigate:
+	python3 tools/cloud9_assembly.py
+
 clean:
 	rm -f hdd.img hdd.base.img
 	make -C kernel clean
+	make -C user clean
 
 kernel/radium.bin:
 	make -C kernel radium.bin
