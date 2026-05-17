@@ -1,4 +1,4 @@
-.PHONY: clean kernel/radium.bin user/init.bin
+.PHONY: clean cloud9-lrd kernel/radium.bin user/init.bin
 
 ifeq ($(shell uname),Darwin)
 $(error Cowardly refusing to run on Mac OS X)
@@ -24,3 +24,6 @@ kernel/radium.bin:
 
 user/init.bin:
 	make -C user init.bin
+
+cloud9-lrd:
+	python3 tools/cloud9_lrd_investigator.py --output docs/cloud9_lrd_investigation.md

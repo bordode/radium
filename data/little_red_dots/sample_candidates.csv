@@ -1,0 +1,5 @@
+name,redshift,bh_mass_msun,stellar_mass_msun,radius_pc,xray_status,notes
+CANUCS-LRD-z8.6-like,8.6,10000000,200000000,150,weak,Representative first-gyr compact red source
+AEGIS-XRD-bridge-like,3.278,4000000,500000000,220,detected,Bridge case with X-ray evidence and lower redshift
+Overmassive-seed-stress-test,12.0,50000000,300000000,90,absorbed,Stress-test row for rapid early growth
+Compact-starburst-control,5.0,100000,1000000000,250,undetected,Control row where stellar power may dominate
